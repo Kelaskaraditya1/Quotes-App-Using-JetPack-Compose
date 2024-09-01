@@ -1,4 +1,4 @@
-package com.starkindustries.quotesappusingjetpackcompose
+package com.starkindustries.quotesappusingjetpackcompose.Activity
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -11,6 +11,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.starkindustries.quotesappusingjetpackcompose.Compose.LoadingScreenCompose
+import com.starkindustries.quotesappusingjetpackcompose.Compose.QuoteListCompose
+import com.starkindustries.quotesappusingjetpackcompose.Data.Quote
+import com.starkindustries.quotesappusingjetpackcompose.Screens.MainScreenCompose
+import com.starkindustries.quotesappusingjetpackcompose.Utility.DataManger
 import com.starkindustries.quotesappusingjetpackcompose.ui.theme.QuotesAppUsingJetPackComposeTheme
 
 class MainActivity : ComponentActivity() {
@@ -18,30 +23,19 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            QuotesAppUsingJetPackComposeTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
+            DataManger.loadAssetsFromFile(this)
+            App()
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
 
-@Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
-    QuotesAppUsingJetPackComposeTheme {
-        Greeting("Android")
+fun App(){
+    if(DataManger.state.value){
+        MainScreenCompose(data = DataManger.data)
+    }
+    else{
+        LoadingScreenCompose()
     }
 }
